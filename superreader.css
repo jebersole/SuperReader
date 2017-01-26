@@ -1,0 +1,93 @@
+/* SuperReader Global Styles */
+
+body {
+   font-family: Helvetica, Arial;
+   font-size: 12pt;
+   color: #2460d2;
+   text-align: center;
+}
+
+/* Gradient pattern to extend from top to bottom of window */
+
+html, body {
+   background: #8ec9fc; /* For browsers that do not support gradients */
+   background: -webkit-linear-gradient(#8ec9fc, white); /* For Safari 5.1 to 6.0 */
+   background: -o-linear-gradient(#8ec9fc, white); /* For Opera 11.1 to 12.0 */
+   background: -moz-linear-gradient(#8ec9fc, white); /* For Firefox 3.6 to 15 */
+   background: linear-gradient(#8ec9fc, white); /* Standard syntax */
+   height: 100%;
+   padding: 0px;
+   margin: 0px;
+}
+
+/* Output and input areas to have the same borders and widths */
+
+#output {
+   font-family: monospace;
+   line-height: 100px;
+   margin: auto;
+   text-align: center;
+   background-color: white;
+   overflow: hidden;
+   height: 100px;
+}
+
+textarea, #output {
+   border: 3px solid #4087e5;
+   border-radius: 5px;
+   width: 100%;
+}
+
+/* Layout and text color */
+
+.highlight { color: red; }
+
+fieldset, legend {
+   color: #2460d2;
+   border: none;
+}
+
+fieldset button, fieldset label {
+   padding-right: 20px;
+}
+
+legend { margin-bottom: 5px; }
+
+button {
+   background-color: transparent;
+   border: none;
+}
+
+img {
+   height: auto;
+   width: auto;
+   max-width: 70%;
+   max-height: 70%;
+}
+
+.controls { margin-top: 50px; margin-bottom: 30px;}
+
+select {
+   width: 175px;
+   padding: 5px 10px;
+   border: 2px solid #4087e5;
+   border-radius: 5px;
+}
+
+/* For adjusting the font size via buttons */
+
+.medium { font-size: 36pt; }
+
+.big { font-size: 48pt; }
+
+.bigger { font-size: 60pt; }
+
+/* Mobile and tablet size adjustments */
+
+@media (min-width: 500px) and (max-width: 1000px) {
+   fieldset { margin-top: 30px; }
+}
+
+@media (min-width: 0px) and (max-width: 700px) {
+   fieldset { margin-top: 20px; }
+}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<!--This program displays and highlights text from user input
+    so that the user can more quickly and easily read it.-->
+  <head>
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <title>SuperReader</title>
+     <link rel="icon" type="image/x-icon" href="favicon.ico">
+     <link href="bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="superreader.css" />
+     <script src="https://unpkg.com/react@15.3.0/dist/react.js"></script>
+     <script src="https://unpkg.com/react-dom@15.3.0/dist/react-dom.js"></script>
+     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  </head>
+  <body>
+       <div id="content"></div>
+       <script type="text/babel">
+       class SuperReader extends React.Component {
+         // State: count keeps track of word currently being read in text vs. timer,
+         // text: user's input split by word, word: array which holds letters to display and letter
+         // to highlight
+         state = { input: '', text: [], word: [], paused: false, playing: false, timer: null,  count: 0, textSize: 'medium'}
+
+         render() {
+            return (
+               <div>
+                  <h1>SuperReader</h1>
+                  <div className="container">
+                     <div className="row">
+                        <div className="col-md-12">
+                           <Output word={this.state.word} textSize={this.state.textSize} id="output" />
+                        </div>
+                     </div>
+                  </div>
+                  <div className="allinput container">
+                     <div className="row controls">
+                        <div className="col-md-4">
+                           <fieldset>
+                              <legend>Play Controls:</legend>
+                              <button onClick={this.handleStart} id="start"><img src="play.png" alt="play"/></button>
+                              <button onClick={this.stopPlayback} id="stop"><img src="stop.png" alt="stop"/></button>
+                              <button onClick={this.pausePlayback} id="pause"><img src="pause.png" alt="pause"/></button>
+                           </fieldset>
+                        </div>
+                        <div className="col-md-4">
+                           <fieldset>
+                              <legend>Spееd:</legend>
+                              <select name="speed" id="speed" onClick={this.startTimer}>
+                                <option value="500">50 wpm (500ms)</option>
+                                <option value="200">300 wpm (200ms)</option>
+                                <option value="171" defaultValue>350 wpm (171ms)</option>
+                                <option value="150">400 wpm (150ms)</option>
+                                <option value="133">450 wpm (133ms)</option>
+                                <option value="120">500 wpm (120ms)</option>
+                             </select>
+                           </fieldset>
+                        </div>
+                        <div className="col-md-4">
+                           <fieldset>
+                              <legend>Size:</legend>
+                              <label><input type="radio" name="size" onClick={()=>this.size('medium')} defaultChecked /> Medium</label>
+                              <label><input type="radio" name="size" onClick={()=>this.size('big')} /> Big</label>
+                              <label><input type="radio" name="size" onClick={()=>this.size('bigger')} /> Bigger</label>
+                           </fieldset>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="container">
+                     <div className="row">
+                        <div className="col-md-12">
+                           <h3>Input Text</h3>
+                           <textarea rows="10" cols="80" onChange={this.handleInput}></textarea>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+         );
+      }
+
+      // Reads user input into an array, removing spaces and punctuation (which can
+      // be distracting). Starts the timer, disables the start button and enables
+      // the stop and pause buttons.
+      handleStart = () => {
+         if (!this.state.paused) { // only processes all the input if reading has not been paused
+            // regex: all non-whitespace characters are replaced with a space, except for some currency
+            // symbols, and ? and %. Dashes, commas, and periods are replaced depending on their positions
+            // in the word (not if they are in the middle). Apostrophes are not replaced unless they are
+            // used as single quotes. Lastly, split by whitespace.
+            var input = this.state.input.replace(/(?!\$)(?!£)(?!€)(?!\?)(?!%)(?!-)(?!')(?!,)(?!\.)\W/g, " ")
+               .replace(/-(?=\s)/g, " ").replace(/[,.](?!\d)/g, " ").replace(/(?!'s)(?!'t)(?!'v)'/g, " ").trim().split(/\s+/);
+            this.setState({text: input});
+         } else {
+            this.setState({paused: false});
+         }
+         this.setState({playing: true}, ()=>this.startTimer());
+         document.getElementById("start").disabled = true;
+         document.getElementById("stop").disabled = false;
+         document.getElementById("pause").disabled = false;
+      }
+
+      // Controls speed of playback if user clicks on a related button, and
+      // adjusts timer accordingly. Also starts timer initially.
+      startTimer = () => {
+        if (this.state.playing) {
+           var speedIn = document.getElementById("speed").options;
+           var choice;
+           for (var i = 0; i < speedIn.length; i++) {
+              if (speedIn[i].selected == true) {
+                 choice = speedIn[i];
+              }
+           }
+           clearInterval(this.state.timer);
+           this.setState({timer: setInterval(this.tick, choice.value)});
+         }
+      }
+
+      // Updates Output to display the current words to be read.
+      // If all of the words have been read, reading is stopped.
+      tick = () => {
+         if (this.state.count < this.state.text.length) {
+            var output = this.highlight();
+            this.setState({count: this.state.count + 1});
+            this.setState({word: output});
+        } else {
+            this.stopPlayback();
+         }
+      }
+
+      // Returns the index of the char to be highlighted, in the middle of the word.
+      // Avoids highlighting punctuation in the middle of a word.
+      highlight = () => {
+         var word = this.state.text[this.state.count];
+         var char = Math.floor(word.length / 2);
+         char = word[char].match(/[^A-za-z0-9]/) ? char - 1 : char;
+         return [word.substring(0, char), word.charAt(char), word.substring(char + 1)];
+      }
+
+      // Stops reading and resets related variables. This is called if all text has been read,
+      // or if the stop or pause buttons are pressed.
+      stopPlayback = () => {
+         clearInterval(this.state.timer);
+         this.setState({playing: false});
+         document.getElementById("stop").disabled = true;
+         document.getElementById("pause").disabled = true;
+         if (this.state.paused) {
+            document.getElementById("start").disabled = false;
+         } else {
+            this.setState({word: ''}); // pausing should freeze the displayed output
+         }
+         this.setState({count: 0});
+      }
+
+      // Pauses reading, saving unread text in an array, then points input to it.
+      pausePlayback = () => {
+         this.setState({paused: true}, ()=>this.stopPlayback());
+         var newin = [];
+         for (var i = this.state.count; i < this.state.text.length; i++) {
+            newin.push(this.state.text[i]);
+         }
+         this.setState({text: newin});
+      }
+
+      // Reads user input as a String
+      handleInput = (e) => {
+        this.setState({input: e.target.value});
+        document.getElementById("start").disabled = false;
+     }
+
+     // Changes Output text size as user presses corresponding buttons
+      size(param) {
+          this.setState({textSize: param});
+      }
+
+}
+
+// Displays one word per tick to user, fed into props as an array of length 3, representing the beginning,
+// middle (highlighted char) and end of the word.
+class Output extends React.Component {
+   render() {
+     return (
+       <div id="output" className={this.props.textSize}>
+         <span>{this.props.word[0]}</span><span className="highlight">{this.props.word[1]}</span>
+            <span>{this.props.word[2]}</span>
+       </div>
+    );
+   }
+}
+
+ReactDOM.render(<SuperReader />, document.getElementById('content'));
+
+</script>
+</body>
+</html>
