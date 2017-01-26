@@ -1,14 +1,15 @@
+
 <!DOCTYPE html>
 <html>
 <!--This program displays and highlights text from user input
-    so that the user can more quickly and easily read it.-->
-    vim: syntax=javascript
+    so that the user can more quickly and easily read it.
+	vim: syntax=javascript-->
   <head>
      <meta charset="utf-8">
      <meta name="viewport" content="width=device-width, initial-scale=1">
      <title>SuperReader</title>
      <link rel="icon" type="image/x-icon" href="favicon.ico">
-     <link href="bootstrap.min.css" rel="stylesheet">
+     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
      <link rel="stylesheet" href="superreader.css" />
      <script src="https://unpkg.com/react@15.3.0/dist/react.js"></script>
      <script src="https://unpkg.com/react-dom@15.3.0/dist/react-dom.js"></script>
@@ -17,7 +18,6 @@
   <body>
        <div id="content"></div>
        <script type="text/babel">
-       vim: syntax="javascript"
        class SuperReader extends React.Component {
          // State: count keeps track of word currently being read in text vs. timer,
          // text: user's input split by word, word: array which holds letters to display and letter
