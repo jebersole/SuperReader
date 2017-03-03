@@ -7,4 +7,4 @@ is removed and highlighting is added to help the eye focus. The speed of playbac
 of the text are also easily adjusted.
 
 This version uses React and Babel along with ES6 syntax. To use, simply clone and open
-`superreader.html` in a browser.
+`superreader.html` in a browser. Alternatively, a live page is available [here](http://ebersolej.net16.net/superreader/superreader.html).
