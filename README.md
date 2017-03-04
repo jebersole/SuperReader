@@ -1,6 +1,6 @@
 # SuperReader
 
-![SuperReader](superreader.jpg?raw=true)
+![SuperReader](assets/superreader.jpg?raw=true)
 
 This program assists an user to quickly read pasted-in text. Distracting punctuation
 is removed and highlighting is added to help the eye focus. The speed of playback and size
